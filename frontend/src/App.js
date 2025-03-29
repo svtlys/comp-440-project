@@ -1,32 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from 'react';
+import HomePage from './HomePage';
 
 function App() {
-    const [publications, setPublications] = useState([]);
-
-    useEffect(() => {
-      fetch("http://localhost:8080/api/publications")
-          .then(response => response.json())
-          .then(data => {
-              console.log("Fetched data:", data);
-              setPublications(data);
-          })
-          .catch(error => console.error("Error fetching publications:", error));
-  }, []);
-
-    return (
-        <div>
-            <h1>Publications</h1>
-            {publications.length > 0 ? (
-                <ul>
-                    {publications.map((pub, index) => (
-                        <li key={index}>{pub}</li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No publications found.</p>
-            )}
-        </div>
-    );
+  return (
+    <div className="App">
+      <HomePage />
+    </div>
+  );
 }
 
 export default App;
