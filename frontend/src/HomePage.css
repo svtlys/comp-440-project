@@ -108,6 +108,7 @@ body, html {
     background-color: #395adf;
   }
   
+  /* Tabs bar line */
   .search-tabs-bar {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
@@ -117,6 +118,7 @@ body, html {
     width: 100%;
   }
   
+  /* Tabs text */
   .search-tabs {
     display: flex;
     justify-content: center;
@@ -157,3 +159,80 @@ body, html {
     margin: 0 auto;
     padding: 0 24px;
   }
+  
+  /* Filter + sort layout */
+  .sort-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 20px;
+  }
+  
+  .filter-sidebar {
+    width: 200px;
+    background-color: #f3f5ff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-size: 0.95rem;
+    color: #333;
+  }
+  
+  .sort-buttons {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  
+  .sort-buttons button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid #4e73df;
+    background-color: white;
+    color: #4e73df;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .sort-buttons button:hover {
+    background-color: #4e73df;
+    color: white;
+  }
+  
+  /* Result cards */
+  .search-results {
+    max-width: 800px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .result-card {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 100px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+  }
+  
+  .result-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .result-card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+    color: #007bff;
+  }
+  
+  .result-card p {
+    margin: 4px 0;
+    color: #444;
+    font-size: 0.95rem;
+  }
+  
