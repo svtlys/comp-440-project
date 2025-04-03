@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './HomePage.css';
 import {
   FaSearch, FaBookOpen, FaUsers, FaCalendarAlt, FaFileAlt,
@@ -6,16 +5,49 @@ import {
   FaMapMarkerAlt, FaLink
 } from 'react-icons/fa';
 import ReactSlider from 'react-slider';
+import { useEffect, useState } from 'react';
+
+// api import
+import { fetchPublications, fetchAuthors } from './api/api';
+
 
 function HomePage() {
-    // Setting up states for search, filters, and sorting
+  //determines whether the user is searching "Publication" or "Author"
   const [searchMode, setSearchMode] = useState('Publication');
+
+  //Stores the keyword the user types into the search box
   const [keyword, setKeyword] = useState('');
+
+  //These two control the minimum and maximum year filter (for publications)
   const [minYear, setMinYear] = useState(2000);
   const [maxYear, setMaxYear] = useState(2024);
-  const [sortField, setSortField] = useState('title');
-  const [sortOrder, setSortOrder] = useState('asc');
 
+  //These control how the results are sorted (by title, name, etc. and order direction)
+  const [sortField, setSortField] = useState('title');
+  const [sortOrder, setSortOrder] = useState('asc'); // asc = ascending, desc = descending
+
+  //These hold the actual data retrieved from the backend API
+  const [realPublications, setRealPublications] = useState([]);
+  const [realAuthors, setRealAuthors] = useState([]);
+
+  
+
+  // Fetch publications and authors from the API
+  useEffect(() => {
+    // If user is in Publication search mode, call the fetchPublications API function
+    if (searchMode === 'Publication') {
+      fetchPublications()
+        .then(data => setRealPublications(data))
+        .catch(err => console.error(err));
+    } else {
+      // If user is in Author search mode, fetch authors instead
+      fetchAuthors()
+        .then(data => setRealAuthors(data))
+        .catch(err => console.error(err));
+    }
+  }, [searchMode]); // This effect will re-run every time `searchMode` changes
+
+  
   const mockPublications = [
     {
       title: "Efficient Algorithms for Big Data",
