@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './HomePage.css';
-import { FaSearch, FaBookOpen, FaUser } from 'react-icons/fa';
+import {
+  FaSearch, FaBookOpen, FaUsers, FaCalendarAlt, FaFileAlt,
+  FaUniversity, FaBuilding, FaUser, FaEnvelope,
+  FaMapMarkerAlt, FaLink
+} from 'react-icons/fa';
 import ReactSlider from 'react-slider';
 
 function HomePage() {
@@ -12,7 +16,6 @@ function HomePage() {
   const [sortField, setSortField] = useState('title');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  // Setting up states for search, filters, and sorting
   const mockPublications = [
     {
       title: "Efficient Algorithms for Big Data",
@@ -262,21 +265,23 @@ function HomePage() {
                 <button className="modal-close" onClick={closeModal}>×</button>
                 {searchMode === 'Publication' ? (
                   <>
-                    <h3>{modalContent.title}</h3>
-                    <p><strong>Authors:</strong> {modalContent.authors.join(', ')}</p>
-                    <p><strong>Year:</strong> {modalContent.year}</p>
-                    <p><strong>Pages:</strong> {modalContent.pages}</p>
-                    <p><strong>Institution:</strong> {modalContent.institution}</p>
-                    <p><strong>Department:</strong> {modalContent.department}</p>
+                  <h3><FaBookOpen style={{ marginRight: '8px' }} />{modalContent.title}</h3>
+                  <p><FaUsers style={{ marginRight: '8px' }} /><strong>Authors:</strong> {modalContent.authors.join(', ')}</p>
+                  <p><FaCalendarAlt style={{ marginRight: '8px' }} /><strong>Year:</strong> {modalContent.year}</p>
+                  <p><FaFileAlt style={{ marginRight: '8px' }} /><strong>Pages:</strong> {modalContent.pages}</p>
+                  <p><FaUniversity style={{ marginRight: '8px' }} /><strong>Institution:</strong> {modalContent.institution}</p>
+                  <p><FaBuilding style={{ marginRight: '8px' }} /><strong>Department:</strong> {modalContent.department}</p>
+
                   </>
                 ) : (
                   <>
-                    <h3>{modalContent.name}</h3>
-                    <p><strong>Institution:</strong> {modalContent.institution}</p>
-                    <p><strong>Department:</strong> {modalContent.department}</p>
-                    <p><strong>Email:</strong> {modalContent.email}</p>
-                    <p><strong>Address:</strong> {modalContent.address}</p>
-                    <p><strong>Homepage:</strong> <a href={modalContent.homepage} target="_blank" rel="noopener noreferrer">{modalContent.homepage}</a></p>
+                    <h3><FaUser style={{ marginRight: '8px' }} />{modalContent.name}</h3>
+                    <p><FaUniversity style={{ marginRight: '8px' }} /><strong>Institution:</strong> {modalContent.institution}</p>
+                    <p><FaBuilding style={{ marginRight: '8px' }} /><strong>Department:</strong> {modalContent.department}</p>
+                    <p><FaEnvelope style={{ marginRight: '8px' }} /><strong>Email:</strong> {modalContent.email}</p>
+                    <p><FaMapMarkerAlt style={{ marginRight: '8px' }} /><strong>Address:</strong> {modalContent.address}</p>
+                    <p><FaLink style={{ marginRight: '8px' }} /><strong>Homepage:</strong> <a href={modalContent.homepage} target="_blank" rel="noopener noreferrer">{modalContent.homepage}</a></p>
+
                   </>
                 )}
               </div>
