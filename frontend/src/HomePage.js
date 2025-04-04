@@ -47,7 +47,7 @@ function HomePage() {
     }
   }, [searchMode]); // This effect will re-run every time `searchMode` changes
 
-  
+  /*
   const mockPublications = [
     {
       title: "Efficient Algorithms for Big Data",
@@ -134,41 +134,34 @@ function HomePage() {
       homepage: "https://utoronto.ca/~clee"
     }
   ];
+
+  */
   
-  // Filter + sort logic for publications
-  const filteredPublications = mockPublications.filter(pub => {
-    const text = `${pub.title} ${pub.authors.join(' ')}`.toLowerCase();
-    const matchesKeyword = keyword === '' || text.includes(keyword.toLowerCase());
-    const matchesYearRange = pub.year >= minYear && pub.year <= maxYear;
-    return matchesKeyword && matchesYearRange;
-  });
+// Filter + sort logic for publications from backend
+const filteredPublications = realPublications.filter(pub => {
+  const text = `${pub.title} ${pub.authors?.join(' ')}`.toLowerCase();
+  const matchesKeyword = keyword === '' || text.includes(keyword.toLowerCase());
+  const matchesYearRange = pub.year >= minYear && pub.year <= maxYear;
+  return matchesKeyword && matchesYearRange;
+});
 
-  const sortedPublications = [...filteredPublications].sort((a, b) => {
-    const valA = a[sortField]?.toString().toLowerCase();
-    const valB = b[sortField]?.toString().toLowerCase();
-    if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-    if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
-    return 0;
-  });
+const sortedPublications = [...filteredPublications].sort((a, b) => {
+  const valA = a[sortField]?.toString().toLowerCase();
+  const valB = b[sortField]?.toString().toLowerCase();
+  if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+  if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+  return 0;
+});
 
-    // Sort logic for authors
-  const sortedAuthors = [...mockAuthors].sort((a, b) => {
-    const valA = a[sortField]?.toString().toLowerCase();
-    const valB = b[sortField]?.toString().toLowerCase();
-    if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-    if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
-    return 0;
-  });
+// Sort logic for authors from backend
+const sortedAuthors = [...realAuthors].sort((a, b) => {
+  const valA = a[sortField]?.toString().toLowerCase();
+  const valB = b[sortField]?.toString().toLowerCase();
+  if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+  if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+  return 0;
+});
 
-  // When user clicks a sort button
-  const toggleSort = (field) => {
-    if (sortField === field) {
-      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortField(field);
-      setSortOrder('asc');
-    }
-  };
 
   // Modal stuff for popups
   const [showModal, setShowModal] = useState(false);
