@@ -1,36 +1,40 @@
 package comp440.demo.model;
 
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@Table(name = "Publication") // important: match SQL table name exactly (uppercase P)
 public class Publication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id") // match SQL column name
     private Long id;
-
     private String title;
+    private String authors;
     private int year;
-    private String venue;
     private String pages;
+    private String institution;
+    private String department;
+
     private String keywords;
 
-    @ManyToMany
-    @JoinTable(
-        name = "publication_authors",
-        joinColumns = @JoinColumn(name = "publication_id"),
-        inverseJoinColumns = @JoinColumn(name = "author_id")
-    )
-    private Set<Author> authors = new HashSet<>();
+    // OPTIONAL: if you're using the join table in addition to the `authors` string
+    // You can keep this if needed later
+// Tell Jackson to ignore the "publications" field inside Author objects
+@JsonIgnoreProperties("publications")
+@ManyToMany
+@JoinTable(
+    name = "AuthorPublication",
+    joinColumns = @JoinColumn(name = "idPublication"),
+    inverseJoinColumns = @JoinColumn(name = "idAuthor")
+)
+private Set<Author> authorEntities = new HashSet<>();
+
 
     // === Getters and Setters ===
 
@@ -50,20 +54,20 @@ public class Publication {
         this.title = title;
     }
 
+    public String getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(String authors) {
+        this.authors = authors;
+    }
+
     public int getYear() {
         return year;
     }
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public String getVenue() {
-        return venue;
-    }
-
-    public void setVenue(String venue) {
-        this.venue = venue;
     }
 
     public String getPages() {
@@ -74,19 +78,36 @@ public class Publication {
         this.pages = pages;
     }
 
+    public String getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Set<Author> getAuthorEntities() {
+        return authorEntities;
+    }
+
+    public void setAuthorEntities(Set<Author> authorEntities) {
+        this.authorEntities = authorEntities;
+    }
+    
+
     public String getKeywords() {
         return keywords;
     }
-
+    
     public void setKeywords(String keywords) {
         this.keywords = keywords;
-    }
-
-    public Set<Author> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
     }
 }

@@ -13,7 +13,7 @@ import { fetchPublications, fetchAuthors } from './api/api';
 
 function HomePage() {
   //determines whether the user is searching "Publication" or "Author"
-  const [searchMode, setSearchMode] = useState('Publication');
+  const [searchMode, setSearchMode] = useState('Author');
 
   //Stores the keyword the user types into the search box
   const [keyword, setKeyword] = useState('');
@@ -33,19 +33,24 @@ function HomePage() {
   
 
   // Fetch publications and authors from the API
-  useEffect(() => {
-    // If user is in Publication search mode, call the fetchPublications API function
+  const handleSearch = () => {
     if (searchMode === 'Publication') {
       fetchPublications()
-        .then(data => setRealPublications(data))
-        .catch(err => console.error(err));
+        .then(data => {
+          console.log("📚 Fetched publications:", data);
+          setRealPublications(data);
+        })
+        .catch(err => console.error("Error fetching publications:", err));
     } else {
-      // If user is in Author search mode, fetch authors instead
       fetchAuthors()
-        .then(data => setRealAuthors(data))
-        .catch(err => console.error(err));
+        .then(data => {
+          console.log("👤 Fetched authors:", data);
+          setRealAuthors(data);
+        })
+        .catch(err => console.error("Error fetching authors:", err));
     }
-  }, [searchMode]); // This effect will re-run every time `searchMode` changes
+  };
+  
 
   /*
   const mockPublications = [
@@ -139,7 +144,7 @@ function HomePage() {
   
 // Filter + sort logic for publications from backend
 const filteredPublications = realPublications.filter(pub => {
-  const text = `${pub.title} ${pub.authors?.join(' ')}`.toLowerCase();
+  const text = `${pub.title} ${Array.isArray(pub.authors) ? pub.authors.join(' ') : pub.authors}`.toLowerCase();
   const matchesKeyword = keyword === '' || text.includes(keyword.toLowerCase());
   const matchesYearRange = pub.year >= minYear && pub.year <= maxYear;
   return matchesKeyword && matchesYearRange;
@@ -162,6 +167,15 @@ const sortedAuthors = [...realAuthors].sort((a, b) => {
   return 0;
 });
 
+// When user clicks a sort button
+const toggleSort = (field) => {
+  if (sortField === field) {
+    setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+  } else {
+    setSortField(field);
+    setSortOrder('asc');
+  }
+};
 
   // Modal stuff for popups
   const [showModal, setShowModal] = useState(false);
@@ -178,144 +192,142 @@ const sortedAuthors = [...realAuthors].sort((a, b) => {
   };
 
   return (
-    <div className="homepage">
-      <nav className="navbar">
+      <div className="homepage">
+        <nav className="navbar">
+          <div className="content-container">
+            <div className="navbar-title">Publication Listing Service</div>
+            <div className="navbar-links">
+              <button><FaBookOpen /> Publications</button>
+              <button><FaUser /> Authors</button>
+              <button><FaSearch /> Search</button>
+            </div>
+          </div>
+        </nav>
+    
         <div className="content-container">
-          <div className="navbar-title">Publication Listing Service</div>
-          <div className="navbar-links">
-            <button><FaBookOpen /> Publications</button>
-            <button><FaUser /> Authors</button>
-            <button><FaSearch /> Search</button>
-          </div>
-        </div>
-      </nav>
-
-      <div className="content-container">
-        <div className="search-section">
-          <h2>Search {searchMode}</h2>
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder={`Search by ${searchMode === 'Publication' ? 'title or author' : 'name or institution'}`}
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
-            <button><FaSearch /> Search</button>
-          </div>
-
-          <div className="search-tabs-bar">
-            <div className="search-tabs">
-              <span className={searchMode === 'Publication' ? 'active' : ''} onClick={() => { setSearchMode('Publication'); setSortField('title'); }}>Publication</span>
-              <span className={searchMode === 'Author' ? 'active' : ''} onClick={() => { setSearchMode('Author'); setSortField('name'); }}>Author</span>
+          <div className="search-section">
+            <h2>Search {searchMode}</h2>
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder={`Search by ${searchMode === 'Publication' ? 'title or author' : 'name or institution'}`}
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+              {/* 🔁 CHANGED BUTTON TO RUN SEARCH */}
+              <button onClick={handleSearch}><FaSearch /> Search</button>
             </div>
-          </div>
-
-          <div className="layout-container">
-            <div className="filter-sidebar">
-              <div className="filter-section">
-                <h4>Keyword</h4>
-                <div className="keyword-box">{keyword || '—'}</div>
+    
+            <div className="search-tabs-bar">
+              <div className="search-tabs">
+                <span className={searchMode === 'Publication' ? 'active' : ''} onClick={() => { setSearchMode('Publication'); setSortField('title'); }}>Publication</span>
+                <span className={searchMode === 'Author' ? 'active' : ''} onClick={() => { setSearchMode('Author'); setSortField('name'); }}>Author</span>
               </div>
-              {searchMode === 'Publication' && (
+            </div>
+    
+            <div className="layout-container">
+              <div className="filter-sidebar">
                 <div className="filter-section">
-                  <h4>Year Range</h4>
-                  <ReactSlider
-                    className="year-slider"
-                    thumbClassName="year-thumb"
-                    trackClassName="year-track"
-                    value={[minYear, maxYear]}
-                    min={1990}
-                    max={2025}
-                    step={1}
-                    onChange={([min, max]) => {
-                      setMinYear(min);
-                      setMaxYear(max);
-                    }}
-                  />
-                  <div style={{ marginTop: '8px', fontSize: '0.85rem' }}>
-                    {minYear} - {maxYear}
-                  </div>
+                  <h4>Keyword</h4>
+                  <div className="keyword-box">{keyword || '—'}</div>
                 </div>
-              )}
-            </div>
-
-            <div className="results-container">
-              <div className="sort-buttons">
-                {searchMode === 'Publication' ? (
-                  <>
-                    <button onClick={() => toggleSort('title')}>
-                      Sort by Title {sortField === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
-                    </button>
-                    <button onClick={() => toggleSort('year')}>
-                      Sort by Year {sortField === 'year' && (sortOrder === 'asc' ? '↑' : '↓')}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => toggleSort('name')}>
-                      Sort by Name {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
-                    </button>
-                    <button onClick={() => toggleSort('institution')}>
-                      Sort by Institution {sortField === 'institution' && (sortOrder === 'asc' ? '↑' : '↓')}
-                    </button>
-                  </>
+                {searchMode === 'Publication' && (
+                  <div className="filter-section">
+                    <h4>Year Range</h4>
+                    <ReactSlider
+                      className="year-slider"
+                      thumbClassName="year-thumb"
+                      trackClassName="year-track"
+                      value={[minYear, maxYear]}
+                      min={1990}
+                      max={2025}
+                      step={1}
+                      onChange={([min, max]) => {
+                        setMinYear(min);
+                        setMaxYear(max);
+                      }}
+                    />
+                    <div style={{ marginTop: '8px', fontSize: '0.85rem' }}>
+                      {minYear} - {maxYear}
+                    </div>
+                  </div>
                 )}
               </div>
-
-              <div className="search-results">
-                {searchMode === 'Publication' ? (
-                  sortedPublications.map((pub, index) => (
-                    <div key={index} className="result-card">
-                      <h3 className="result-title" onClick={() => openModal(pub)}>{pub.title}</h3>
-                      <p><strong>Authors:</strong> {pub.authors.join(', ')}</p>
-                      <p><strong>Year:</strong> {pub.year}</p>
-                    </div>
-                  ))
-                ) : (
-                  sortedAuthors.map((author, index) => (
-                    <div key={index} className="result-card">
-                      <h3 className="result-title" onClick={() => openModal(author)}>{author.name}</h3>
-                      <p><strong>Institution:</strong> {author.institution}</p>
-                      <p><strong>Homepage:</strong> <a href={author.homepage} target="_blank" rel="noopener noreferrer">{author.homepage}</a></p>
-                    </div>
-                  ))
-                )}
+    
+              <div className="results-container">
+                <div className="sort-buttons">
+                  {searchMode === 'Publication' ? (
+                    <>
+                      <button onClick={() => toggleSort('title')}>
+                        Sort by Title {sortField === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      </button>
+                      <button onClick={() => toggleSort('year')}>
+                        Sort by Year {sortField === 'year' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => toggleSort('name')}>
+                        Sort by Name {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      </button>
+                      <button onClick={() => toggleSort('institution')}>
+                        Sort by Institution {sortField === 'institution' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      </button>
+                    </>
+                  )}
+                </div>
+    
+                <div className="search-results">
+                  {searchMode === 'Publication' ? (
+                    sortedPublications.map((pub, index) => (
+                      <div key={index} className="result-card">
+                        <h3 className="result-title" onClick={() => openModal(pub)}>{pub.title}</h3>
+                        <p><strong>Authors:</strong> {Array.isArray(pub.authors) ? pub.authors.join(', ') : pub.authors}</p>
+                        <p><strong>Year:</strong> {pub.year}</p>
+                      </div>
+                    ))
+                  ) : (
+                    sortedAuthors.map((author, index) => (
+                      <div key={index} className="result-card">
+                        <h3 className="result-title" onClick={() => openModal(author)}>{author.name}</h3>
+                        <p><strong>Institution:</strong> {author.institution}</p>
+                        <p><strong>Homepage:</strong> <a href={author.homepage} target="_blank" rel="noopener noreferrer">{author.homepage}</a></p>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
+    
+            {showModal && (
+              <div className="modal-overlay" onClick={closeModal}>
+                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <button className="modal-close" onClick={closeModal}>×</button>
+                  {searchMode === 'Publication' ? (
+                    <>
+                      <h3><FaBookOpen style={{ marginRight: '8px' }} />{modalContent.title}</h3>
+                      <p><FaUsers style={{ marginRight: '8px' }} /><strong>Authors:</strong> {Array.isArray(modalContent.authors) ? modalContent.authors.join(', ') : modalContent.authors}</p>
+                      <p><FaCalendarAlt style={{ marginRight: '8px' }} /><strong>Year:</strong> {modalContent.year}</p>
+                      <p><FaFileAlt style={{ marginRight: '8px' }} /><strong>Pages:</strong> {modalContent.pages}</p>
+                      <p><FaUniversity style={{ marginRight: '8px' }} /><strong>Institution:</strong> {modalContent.institution}</p>
+                      <p><FaBuilding style={{ marginRight: '8px' }} /><strong>Department:</strong> {modalContent.department}</p>
+                    </>
+                  ) : (
+                    <>
+                      <h3><FaUser style={{ marginRight: '8px' }} />{modalContent.name}</h3>
+                      <p><FaUniversity style={{ marginRight: '8px' }} /><strong>Institution:</strong> {modalContent.institution}</p>
+                      <p><FaBuilding style={{ marginRight: '8px' }} /><strong>Department:</strong> {modalContent.department}</p>
+                      <p><FaEnvelope style={{ marginRight: '8px' }} /><strong>Email:</strong> {modalContent.email}</p>
+                      <p><FaMapMarkerAlt style={{ marginRight: '8px' }} /><strong>Address:</strong> {modalContent.address}</p>
+                      <p><FaLink style={{ marginRight: '8px' }} /><strong>Homepage:</strong> <a href={modalContent.homepage} target="_blank" rel="noopener noreferrer">{modalContent.homepage}</a></p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-
-          {showModal && (
-            <div className="modal-overlay" onClick={closeModal}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="modal-close" onClick={closeModal}>×</button>
-                {searchMode === 'Publication' ? (
-                  <>
-                  <h3><FaBookOpen style={{ marginRight: '8px' }} />{modalContent.title}</h3>
-                  <p><FaUsers style={{ marginRight: '8px' }} /><strong>Authors:</strong> {modalContent.authors.join(', ')}</p>
-                  <p><FaCalendarAlt style={{ marginRight: '8px' }} /><strong>Year:</strong> {modalContent.year}</p>
-                  <p><FaFileAlt style={{ marginRight: '8px' }} /><strong>Pages:</strong> {modalContent.pages}</p>
-                  <p><FaUniversity style={{ marginRight: '8px' }} /><strong>Institution:</strong> {modalContent.institution}</p>
-                  <p><FaBuilding style={{ marginRight: '8px' }} /><strong>Department:</strong> {modalContent.department}</p>
-
-                  </>
-                ) : (
-                  <>
-                    <h3><FaUser style={{ marginRight: '8px' }} />{modalContent.name}</h3>
-                    <p><FaUniversity style={{ marginRight: '8px' }} /><strong>Institution:</strong> {modalContent.institution}</p>
-                    <p><FaBuilding style={{ marginRight: '8px' }} /><strong>Department:</strong> {modalContent.department}</p>
-                    <p><FaEnvelope style={{ marginRight: '8px' }} /><strong>Email:</strong> {modalContent.email}</p>
-                    <p><FaMapMarkerAlt style={{ marginRight: '8px' }} /><strong>Address:</strong> {modalContent.address}</p>
-                    <p><FaLink style={{ marginRight: '8px' }} /><strong>Homepage:</strong> <a href={modalContent.homepage} target="_blank" rel="noopener noreferrer">{modalContent.homepage}</a></p>
-
-                  </>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
-    </div>
-  );
-}
-
-export default HomePage;
+    );
+  }
+export default HomePage;  

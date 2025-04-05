@@ -24,7 +24,7 @@ public class PublicationService {
     }
 
     public List<Publication> getByAuthor(Long authorId) {
-        return pubRepo.findByAuthors_Id(authorId);
+        return pubRepo.findByAuthorEntities_IdAuthor(authorId);
     }
 
     public List<Publication> searchByKeyword(String keyword) {
@@ -33,7 +33,7 @@ public class PublicationService {
 
     public Publication createPublication(Publication publication, List<Long> authorIds) {
         Set<Author> authors = new HashSet<>(authorRepo.findAllById(authorIds));
-        publication.setAuthors(authors);
+        publication.setAuthorEntities(authors);  
         return pubRepo.save(publication);
     }
 }
