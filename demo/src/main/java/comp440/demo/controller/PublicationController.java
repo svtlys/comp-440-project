@@ -34,4 +34,16 @@ public class PublicationController {
                               @RequestParam List<Long> authorIds) {
         return publicationService.createPublication(publication, authorIds);
     }
+
+    @PutMapping("/{id}")
+    public Publication updatePublication(@PathVariable Long id,
+                              @RequestBody Publication updatedPub,
+                              @RequestParam(required = false) List<Long> authorIds) {
+        return publicationService.updatePublication(id, updatedPub, authorIds);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+    publicationService.deletePublication(id);
+    }
 }
