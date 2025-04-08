@@ -6,6 +6,11 @@ import {
 } from 'react-icons/fa';
 import ReactSlider from 'react-slider';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PublicationPage from './PublicationPage';
+import AuthorPage from './AuthorPage';
+
+
 
 // api import
 import { fetchPublications, fetchAuthors } from './api/api';
@@ -29,6 +34,8 @@ function HomePage() {
   //These hold the actual data retrieved from the backend API
   const [realPublications, setRealPublications] = useState([]);
   const [realAuthors, setRealAuthors] = useState([]);
+
+  const navigate = useNavigate();
 
   
 
@@ -194,16 +201,22 @@ const toggleSort = (field) => {
   return (
       <div className="homepage">
         <nav className="navbar">
-          <div className="content-container">
-            <div className="navbar-title">Publication Listing Service</div>
-            <div className="navbar-links">
-              <button><FaBookOpen /> Publications</button>
-              <button><FaUser /> Authors</button>
-              <button><FaSearch /> Search</button>
-            </div>
-          </div>
-        </nav>
-    
+  <div className="content-container">
+    <div className="navbar-title">Publication Listing Service</div>
+    <div className="navbar-links">
+      <button onClick={() => navigate('/publications')}>
+        <FaBookOpen /> Publications
+      </button>
+      <button onClick={() => navigate('/authors')}>
+        <FaUser /> Authors
+      </button>
+      <button onClick={() => navigate('/')}>
+        <FaSearch /> Search
+      </button>
+    </div>
+  </div>
+</nav>
+
         <div className="content-container">
           <div className="search-section">
             <h2>Search {searchMode}</h2>

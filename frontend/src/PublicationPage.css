@@ -1,0 +1,128 @@
+.navbar {
+    background-color: #003366;
+    padding: 15px 0;
+    color: white;
+  }
+  
+  .navbar .content-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .navbar-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .navbar-links button {
+    margin-left: 12px;
+    background-color: #005599;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .navbar-links button:hover {
+    background-color: #0077cc;
+  }
+  
+  /* Container for rest of page */
+  .content-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  
+  /* Form styles */
+  .publication-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  
+  .publication-form input {
+    flex: 1 1 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .publication-form button {
+    padding: 10px 16px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .publication-form button:hover {
+    background-color: #005599;
+  }
+  
+  /* Publication cards */
+  .publication-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  
+  .publication-card {
+    border: 1px solid #ddd;
+    padding: 18px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    background-color: white;
+  }
+  
+  .publication-card h3 {
+    margin-top: 0;
+    color: #003366;
+  }
+  
+  .publication-card p {
+    margin: 6px 0;
+    font-size: 14px;
+  }
+  
+  .publication-card button {
+    margin-top: 10px;
+    margin-right: 10px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  
+  .publication-card button:hover {
+    background-color: #c9302c;
+  }
+  
+  .publication-card button:first-of-type {
+    background-color: #5cb85c;
+  }
+  
+  .publication-card button:first-of-type:hover {
+    background-color: #449d44;
+  }
+  .publication-list-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 24px 0 12px;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 4px;
+  }
+  
