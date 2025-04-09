@@ -67,3 +67,45 @@ export const deletePublication = async (id) => {
     console.error("Error deleting publication:", error);
   }
 };
+
+// Create a new author
+export const createAuthor = async (newAuthor) => {
+  try {
+    const res = await fetch(`${API_BASE}/authors`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newAuthor),
+    });
+    if (!res.ok) throw new Error(`Failed to create author: ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.error("Error creating author:", error);
+  }
+};
+
+// Update an existing author
+export const updateAuthor = async (id, updatedAuthor) => {
+  try {
+    const res = await fetch(`${API_BASE}/authors/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedAuthor),
+    });
+    if (!res.ok) throw new Error(`Failed to update author: ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.error("Error updating author:", error);
+  }
+};
+
+// Delete an author
+export const deleteAuthor = async (id) => {
+  try {
+    const res = await fetch(`${API_BASE}/authors/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error(`Failed to delete author: ${res.status}`);
+  } catch (error) {
+    console.error("Error deleting author:", error);
+  }
+};
