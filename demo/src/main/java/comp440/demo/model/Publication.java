@@ -7,43 +7,39 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "Publication") // important: match SQL table name exactly (uppercase P)
+@Table(name = "Publication")
 public class Publication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") // match SQL column name
-    private Long id;
+    @Column(name = "idPublication") // Match SQL column name
+    private Long idPublication;
+
     private String title;
     private String authors;
     private int year;
     private String pages;
     private String institution;
     private String department;
+    private String keywords; // Add back keyword field
 
-    private String keywords;
-
-    // OPTIONAL: if you're using the join table in addition to the `authors` string
-    // You can keep this if needed later
-// Tell Jackson to ignore the "publications" field inside Author objects
-@JsonIgnoreProperties("publications")
-@ManyToMany
-@JoinTable(
-    name = "AuthorPublication",
-    joinColumns = @JoinColumn(name = "idPublication"),
-    inverseJoinColumns = @JoinColumn(name = "idAuthor")
-)
-private Set<Author> authorEntities = new HashSet<>();
-
+    @JsonIgnoreProperties("publications")
+    @ManyToMany
+    @JoinTable(
+        name = "AuthorPublication",
+        joinColumns = @JoinColumn(name = "idPublication"),
+        inverseJoinColumns = @JoinColumn(name = "idAuthor")
+    )
+    private Set<Author> authorEntities = new HashSet<>();
 
     // === Getters and Setters ===
 
-    public Long getId() {
-        return id;
+    public Long getIdPublication() {
+        return idPublication;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdPublication(Long idPublication) {
+        this.idPublication = idPublication;
     }
 
     public String getTitle() {
@@ -94,20 +90,19 @@ private Set<Author> authorEntities = new HashSet<>();
         this.department = department;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
     public Set<Author> getAuthorEntities() {
         return authorEntities;
     }
 
     public void setAuthorEntities(Set<Author> authorEntities) {
         this.authorEntities = authorEntities;
-    }
-    
-
-    public String getKeywords() {
-        return keywords;
-    }
-    
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
     }
 }

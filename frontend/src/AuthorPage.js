@@ -53,10 +53,11 @@ function AuthorPage() {
     setEditingId(null);
     loadAuthors();
   };
+  
 
   const handleEdit = (author) => {
     setFormData(author);
-    setEditingId(author.id);
+    setEditingId(author.idAuthor);
   };
 
   const handleDelete = async (id) => {
@@ -102,7 +103,7 @@ function AuthorPage() {
 
         <div className="publication-list">
           {authors.map(author => (
-            <div key={author.id} className="publication-card">
+            <div key={author.idAuthor} className="publication-card">
               <h3>{author.name}</h3>
               <p><strong>Institution:</strong> {author.institution}</p>
               <p><strong>Department:</strong> {author.department}</p>
@@ -110,7 +111,7 @@ function AuthorPage() {
               <p><strong>Address:</strong> {author.address}</p>
               <p><strong>Homepage:</strong> <a href={author.homepage} target="_blank" rel="noreferrer">{author.homepage}</a></p>
               <button onClick={() => handleEdit(author)}>Edit</button>
-              <button onClick={() => handleDelete(author.id)}>Delete</button>
+              <button onClick={() => handleDelete(author.idAuthor)}>Delete</button>
             </div>
           ))}
         </div>

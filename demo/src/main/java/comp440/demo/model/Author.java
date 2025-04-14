@@ -7,12 +7,12 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Author") // Match exact SQL table name
+@Table(name = "Author")
 public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") // Match SQL column name
+    @Column(name = "idAuthor") // Match SQL column name
     private Long idAuthor;
 
     private String name;
@@ -22,13 +22,13 @@ public class Author {
     private String address;
     private String homepage;
 
-    @ManyToMany(mappedBy = "authorEntities") // match the field name in Publication.java
-    @JsonIgnore  // <-- this breaks the recursion
+    @ManyToMany(mappedBy = "authorEntities")
+    @JsonIgnore
     private Set<Publication> publications = new HashSet<>();
 
     // === Getters and Setters ===
 
-    public Long getidAuthor() {
+    public Long getIdAuthor() {
         return idAuthor;
     }
 

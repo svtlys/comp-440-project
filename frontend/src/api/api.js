@@ -27,13 +27,17 @@ export const fetchAuthors = async () => {
 };
 
 // Create a new publication
-export const createPublication = async (newPub) => {
+export const createPublication = async (newPub, authorIds) => {
   try {
-    const res = await fetch(`${API_BASE}/publications`, {
+    const url = new URL(`${API_BASE}/publications`);
+    authorIds.forEach(id => url.searchParams.append("authorIds", id));
+
+    const res = await fetch(url.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newPub),
     });
+
     if (!res.ok) throw new Error(`Failed to create publication: ${res.status}`);
     return await res.json();
   } catch (error) {
@@ -41,20 +45,26 @@ export const createPublication = async (newPub) => {
   }
 };
 
+
 // Update an existing publication
-export const updatePublication = async (id, updatedPub) => {
+export const updatePublication = async (id, updatedPub, authorIds) => {
   try {
-    const res = await fetch(`${API_BASE}/publications/${id}`, {
+    const url = new URL(`${API_BASE}/publications/${id}`);
+    authorIds.forEach(id => url.searchParams.append("authorIds", id));
+
+    const res = await fetch(url.toString(), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedPub),
     });
+
     if (!res.ok) throw new Error(`Failed to update publication: ${res.status}`);
     return await res.json();
   } catch (error) {
     console.error("Error updating publication:", error);
   }
 };
+
 
 // Delete a publication
 export const deletePublication = async (id) => {

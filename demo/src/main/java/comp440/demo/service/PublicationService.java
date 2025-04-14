@@ -1,81 +1,82 @@
 package comp440.demo.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import comp440.demo.model.Publication;
+import comp440.demo.repository.AuthorPublicationRepository;
+import comp440.demo.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import comp440.demo.model.Author;
-import comp440.demo.model.Publication;
-import comp440.demo.repository.AuthorRepository;
-import comp440.demo.repository.PublicationRepository;
+import java.util.List;
 
 @Service
 public class PublicationService {
 
     @Autowired
-    private PublicationRepository pubRepo;
+    private PublicationRepository publicationRepository;
 
     @Autowired
-    private AuthorRepository authorRepo;
+    private AuthorPublicationRepository authorPublicationRepository;
 
-    // Get all publications
     public List<Publication> getAllPublications() {
-        return pubRepo.findAll();
+        return publicationRepository.getAllPublications();
     }
 
-    // Get publications by author ID
     public List<Publication> getByAuthor(Long authorId) {
-        return pubRepo.findByAuthorEntities_IdAuthor(authorId);
+        return publicationRepository.findByAuthor(authorId);
     }
 
-    // Search publications by keyword
     public List<Publication> searchByKeyword(String keyword) {
-        return pubRepo.findByKeywordsContainingIgnoreCase(keyword);
+        return publicationRepository.searchByKeyword(keyword);
     }
 
-    // Create new publication with linked authors
-    public Publication createPublication(Publication publication, List<Long> authorIds) {
-        Set<Author> authors = new HashSet<>(authorRepo.findAllById(authorIds));
-        publication.setAuthorEntities(authors);
-        return pubRepo.save(publication);
-    }
+    @Transactional
+    public Publication createPublication(Publication pub, List<Long> authorIds) {
+        publicationRepository.insertPublication(
+            pub.getTitle(),
+            pub.getAuthors(),
+            String.valueOf(pub.getYear()),  // Convert int to String
+            pub.getPages(),
+            pub.getInstitution(),
+            pub.getDepartment(),
+            pub.getKeywords()
+        );
 
-    // Update existing publication
-    public Publication updatePublication(Long id, Publication updatedPub, List<Long> authorIds) {
-        Publication existing = pubRepo.findById(id).orElse(null);
-        if (existing == null) return null;
+        Long newId = publicationRepository.getLastInsertedId();
 
-        existing.setTitle(updatedPub.getTitle());
-        existing.setYear(updatedPub.getYear());
-        existing.setPages(updatedPub.getPages());
-        existing.setInstitution(updatedPub.getInstitution());
-        existing.setDepartment(updatedPub.getDepartment());
-        existing.setKeywords(updatedPub.getKeywords());
-        existing.setAuthors(updatedPub.getAuthors());
-
-        if (authorIds != null) {
-            Set<Author> authors = new HashSet<>(authorRepo.findAllById(authorIds));
-            existing.setAuthorEntities(authors);
+        for (Long authorId : authorIds) {
+            authorPublicationRepository.linkAuthorToPublication(authorId, newId);
         }
 
-        return pubRepo.save(existing);
+        pub.setIdPublication(newId); // Set the generated ID
+        return pub;
     }
 
-    // Delete a publication by ID
+    @Transactional
+    public void updatePublication(Long id, Publication pub, List<Long> authorIds) {
+        publicationRepository.updatePublication(
+            id,
+            pub.getTitle(),
+            pub.getAuthors(),
+            String.valueOf(pub.getYear()),
+            pub.getPages(), // leave as-is if it's already a String
+            pub.getInstitution(),
+            pub.getDepartment(),
+            pub.getKeywords()
+        );
+        
+        // Delete old author links
+        authorPublicationRepository.deleteLinksByPublication(id);
+    
+        // Insert new author links
+        for (Long authorId : authorIds) {
+            authorPublicationRepository.linkAuthorToPublication(authorId, id);
+        }
+    }
+    
+    @Transactional
     public void deletePublication(Long id) {
-        pubRepo.deleteById(id);
+        authorPublicationRepository.deleteLinksByPublication(id);
+        publicationRepository.deletePublicationById(id); // ✅ This is the correct method name!
     }
-
-    // Utility method to fetch publication by ID
-    public Publication getPublicationById(Long id) {
-        return pubRepo.findById(id).orElse(null);
-    }
-
-    // Optional: save directly if needed by controller
-    public Publication savePublication(Publication publication) {
-        return pubRepo.save(publication);
-    }
-}
+}    

@@ -165,14 +165,20 @@ const sortedPublications = [...filteredPublications].sort((a, b) => {
   return 0;
 });
 
-// Sort logic for authors from backend
-const sortedAuthors = [...realAuthors].sort((a, b) => {
+// Filter + sort logic for authors
+const filteredAuthors = realAuthors.filter(author => {
+  const text = `${author.name} ${author.institution}`.toLowerCase();
+  return keyword === '' || text.includes(keyword.toLowerCase());
+});
+
+const sortedAuthors = [...filteredAuthors].sort((a, b) => {
   const valA = a[sortField]?.toString().toLowerCase();
   const valB = b[sortField]?.toString().toLowerCase();
   if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
   if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
   return 0;
 });
+
 
 // When user clicks a sort button
 const toggleSort = (field) => {

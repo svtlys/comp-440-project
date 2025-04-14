@@ -14,36 +14,42 @@ public class PublicationController {
     @Autowired
     private PublicationService publicationService;
 
+    // Get all publications
     @GetMapping
     public List<Publication> getAll() {
         return publicationService.getAllPublications();
     }
 
+    // Get all publications by a specific author
     @GetMapping("/author/{authorId}")
     public List<Publication> getByAuthor(@PathVariable Long authorId) {
         return publicationService.getByAuthor(authorId);
     }
 
+    // Search publications by keyword
     @GetMapping("/search")
     public List<Publication> search(@RequestParam String keyword) {
         return publicationService.searchByKeyword(keyword);
     }
 
+    // Create a new publication with associated author IDs
     @PostMapping
-    public Publication create(@RequestBody Publication publication,
-                              @RequestParam List<Long> authorIds) {
+    public Publication createPublication(@RequestBody Publication publication,
+                                         @RequestParam List<Long> authorIds) {
         return publicationService.createPublication(publication, authorIds);
     }
 
+    // Update a publication by ID
     @PutMapping("/{id}")
-    public Publication updatePublication(@PathVariable Long id,
-                              @RequestBody Publication updatedPub,
-                              @RequestParam(required = false) List<Long> authorIds) {
-        return publicationService.updatePublication(id, updatedPub, authorIds);
+    public void updatePublication(@PathVariable Long id,
+                                  @RequestBody Publication updatedPub,
+                                  @RequestParam List<Long> authorIds) {
+        publicationService.updatePublication(id, updatedPub, authorIds);
     }
 
+    // Delete a publication by ID
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-    publicationService.deletePublication(id);
+        publicationService.deletePublication(id);
     }
 }

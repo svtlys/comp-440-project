@@ -35,21 +35,16 @@ function PublicationPage() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (editingId) {
-      await updatePublication(editingId, formData);
-    } else {
-      await createPublication(formData);
-    }
-    setFormData({ title: '', authors: '', year: '', pages: '', institution: '', department: '' });
-    setEditingId(null);
-    loadPublications();
-  };
-
   const handleEdit = (pub) => {
-    setFormData(pub);
-    setEditingId(pub.id);
+    setFormData({
+      title: pub.title,
+      authors: pub.authors,
+      year: pub.year.toString(),
+      pages: pub.pages,
+      institution: pub.institution,
+      department: pub.department
+    });
+    setEditingId(pub.idPublication); // ✅ use correct ID
   };
 
   const handleDelete = async (id) => {
@@ -57,9 +52,40 @@ function PublicationPage() {
     loadPublications();
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      title: formData.title,
+      authors: formData.authors,
+      year: parseInt(formData.year),
+      pages: formData.pages ? parseInt(formData.pages) : null,
+      institution: formData.institution,
+      department: formData.department
+    };
+
+    const authorIds = [1]; // Replace with dynamic logic later
+
+    if (editingId) {
+      await updatePublication(editingId, payload, authorIds);
+    } else {
+      await createPublication(payload, authorIds);
+    }
+
+    setFormData({
+      title: '',
+      authors: '',
+      year: '',
+      pages: '',
+      institution: '',
+      department: ''
+    });
+    setEditingId(null);
+    loadPublications();
+  };
+
   return (
     <div className="publication-page">
-      {/* 🔹 NAVBAR */}
       <nav className="navbar">
         <div className="content-container">
           <div className="navbar-title">Publication Listing Service</div>
@@ -77,7 +103,6 @@ function PublicationPage() {
         </div>
       </nav>
 
-      {/* 🔹 MAIN CONTENT */}
       <div className="content-container">
         <h2>Manage Publications</h2>
 
@@ -91,12 +116,11 @@ function PublicationPage() {
           <button type="submit">{editingId ? 'Update' : 'Add'} Publication</button>
         </form>
 
-
         <h3 className="publication-list-title">Current Publications</h3>
 
         <div className="publication-list">
           {publications.map(pub => (
-            <div key={pub.id} className="publication-card">
+            <div key={pub.idPublication} className="publication-card">
               <h3>{pub.title}</h3>
               <p><strong>Authors:</strong> {pub.authors}</p>
               <p><strong>Year:</strong> {pub.year}</p>
@@ -104,7 +128,7 @@ function PublicationPage() {
               <p><strong>Institution:</strong> {pub.institution}</p>
               <p><strong>Department:</strong> {pub.department}</p>
               <button onClick={() => handleEdit(pub)}>Edit</button>
-              <button onClick={() => handleDelete(pub.id)}>Delete</button>
+              <button onClick={() => handleDelete(pub.idPublication)}>Delete</button>
             </div>
           ))}
         </div>
