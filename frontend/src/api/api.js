@@ -29,13 +29,13 @@ export const fetchAuthors = async () => {
 // Create a new publication
 export const createPublication = async (newPub, authorIds) => {
   try {
-    const url = new URL(`${API_BASE}/publications`);
-    authorIds.forEach(id => url.searchParams.append("authorIds", id));
-
-    const res = await fetch(url.toString(), {
+    const res = await fetch(`${API_BASE}/publications`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newPub),
+      body: JSON.stringify({
+        publication: newPub,
+        authorIds: authorIds
+      }),
     });
 
     if (!res.ok) throw new Error(`Failed to create publication: ${res.status}`);
@@ -49,13 +49,13 @@ export const createPublication = async (newPub, authorIds) => {
 // Update an existing publication
 export const updatePublication = async (id, updatedPub, authorIds) => {
   try {
-    const url = new URL(`${API_BASE}/publications/${id}`);
-    authorIds.forEach(id => url.searchParams.append("authorIds", id));
-
-    const res = await fetch(url.toString(), {
+    const res = await fetch(`${API_BASE}/publications/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedPub),
+      body: JSON.stringify({
+        publication: updatedPub,
+        authorIds: authorIds
+      }),
     });
 
     if (!res.ok) throw new Error(`Failed to update publication: ${res.status}`);

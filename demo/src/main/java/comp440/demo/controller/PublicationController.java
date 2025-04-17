@@ -4,6 +4,7 @@ import comp440.demo.model.Publication;
 import comp440.demo.service.PublicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import comp440.demo.request.PublicationRequest;
 
 import java.util.List;
 
@@ -34,18 +35,16 @@ public class PublicationController {
 
     // Create a new publication with associated author IDs
     @PostMapping
-    public Publication createPublication(@RequestBody Publication publication,
-                                         @RequestParam List<Long> authorIds) {
-        return publicationService.createPublication(publication, authorIds);
+    public Publication createPublication(@RequestBody PublicationRequest request) {
+        return publicationService.createPublication(request.getPublication(), request.getAuthorIds());
     }
 
     // Update a publication by ID
     @PutMapping("/{id}")
-    public void updatePublication(@PathVariable Long id,
-                                  @RequestBody Publication updatedPub,
-                                  @RequestParam List<Long> authorIds) {
-        publicationService.updatePublication(id, updatedPub, authorIds);
+    public void updatePublication(@PathVariable Long id, @RequestBody PublicationRequest request) {
+        publicationService.updatePublication(id, request.getPublication(), request.getAuthorIds());
     }
+
 
     // Delete a publication by ID
     @DeleteMapping("/{id}")

@@ -34,7 +34,7 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
                    "VALUES (:title, :authors, :year, :pages, :institution, :department, :keywords)", nativeQuery = true)
     void insertPublication(@Param("title") String title,
                            @Param("authors") String authors,
-                           @Param("year") String year,
+                           @Param("year") int year,
                            @Param("pages") String pages,
                            @Param("institution") String institution,
                            @Param("department") String department,

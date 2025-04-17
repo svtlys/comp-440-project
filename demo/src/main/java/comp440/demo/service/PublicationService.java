@@ -2,12 +2,15 @@ package comp440.demo.service;
 
 import comp440.demo.model.Publication;
 import comp440.demo.repository.AuthorPublicationRepository;
+import comp440.demo.repository.AuthorRepository;
 import comp440.demo.repository.PublicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicationService {
@@ -17,6 +20,10 @@ public class PublicationService {
 
     @Autowired
     private AuthorPublicationRepository authorPublicationRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository; 
+
 
     public List<Publication> getAllPublications() {
         return publicationRepository.getAllPublications();
@@ -32,25 +39,39 @@ public class PublicationService {
 
     @Transactional
     public Publication createPublication(Publication pub, List<Long> authorIds) {
+        if (pub == null) {
+            throw new IllegalArgumentException("Publication cannot be null");
+        }
+    
+        //Manually construct author string from authorIds
+        String authorsString = authorIds.stream()
+            .map(id -> authorRepository.findById(id).map(a -> a.getName()).orElse("Unknown"))
+            .collect(Collectors.joining(", "));
+    
+        //Insert publication (for legacy display of authors)
         publicationRepository.insertPublication(
             pub.getTitle(),
-            pub.getAuthors(),
-            String.valueOf(pub.getYear()),  // Convert int to String
+            authorsString,
+            pub.getYear(),
             pub.getPages(),
             pub.getInstitution(),
             pub.getDepartment(),
             pub.getKeywords()
         );
-
+    
+        // Get newly inserted ID
         Long newId = publicationRepository.getLastInsertedId();
-
+    
+        // Manually insert into join table
         for (Long authorId : authorIds) {
             authorPublicationRepository.linkAuthorToPublication(authorId, newId);
         }
-
-        pub.setIdPublication(newId); // Set the generated ID
+    
+        pub.setIdPublication(newId);
+        pub.setAuthors(authorsString); // for completeness
         return pub;
     }
+    
 
     @Transactional
     public void updatePublication(Long id, Publication pub, List<Long> authorIds) {
@@ -59,24 +80,24 @@ public class PublicationService {
             pub.getTitle(),
             pub.getAuthors(),
             String.valueOf(pub.getYear()),
-            pub.getPages(), // leave as-is if it's already a String
+            pub.getPages(),
             pub.getInstitution(),
             pub.getDepartment(),
             pub.getKeywords()
         );
-        
-        // Delete old author links
+
+        // Remove previous links
         authorPublicationRepository.deleteLinksByPublication(id);
-    
-        // Insert new author links
+
+        // Insert new links
         for (Long authorId : authorIds) {
             authorPublicationRepository.linkAuthorToPublication(authorId, id);
         }
     }
-    
+
     @Transactional
     public void deletePublication(Long id) {
         authorPublicationRepository.deleteLinksByPublication(id);
-        publicationRepository.deletePublicationById(id); // ✅ This is the correct method name!
+        publicationRepository.deletePublicationById(id);
     }
-}    
+}

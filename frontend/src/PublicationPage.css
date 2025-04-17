@@ -1,128 +1,282 @@
+:root {
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --primary-light: #EEF2FF;
+  --text-dark: #1E293B;
+  --border-color: #CBD5E1;
+}
+
+.publication-content-card {
+  background: white;
+  padding: 50px 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  margin-top: 40px;
+}
+
+
+.page-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #1e293b;
+}
+
+.section-divider {
+  margin: 30px 0;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+}
+
+
+/* ========================= */
+/* 🔵 BUTTON STYLES          */
+/* ========================= */
+.btn, .add-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn:hover,
+.add-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-outline:hover,
+.btn-outline.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+.clear-button {
+  border-color: #888;
+  color: #555;
+}
+
+.clear-button:hover {
+  background-color: #f3f3f3;
+  color: #222;
+}
+
+
+/* ========================= */
+/* NAVBAR                    */
+/* ========================= */
 .navbar {
-    background-color: #003366;
-    padding: 15px 0;
-    color: white;
-  }
-  
-  .navbar .content-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-  
-  .navbar-title {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .navbar-links button {
-    margin-left: 12px;
-    background-color: #005599;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .navbar-links button:hover {
-    background-color: #0077cc;
-  }
-  
-  /* Container for rest of page */
-  .content-container {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 0 20px;
-  }
-  
-  /* Form styles */
-  .publication-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 30px;
-  }
-  
-  .publication-form input {
-    flex: 1 1 300px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .publication-form button {
-    padding: 10px 16px;
-    background-color: #003366;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .publication-form button:hover {
-    background-color: #005599;
-  }
-  
-  /* Publication cards */
-  .publication-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-  }
-  
-  .publication-card {
-    border: 1px solid #ddd;
-    padding: 18px;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    background-color: white;
-  }
-  
-  .publication-card h3 {
-    margin-top: 0;
-    color: #003366;
-  }
-  
-  .publication-card p {
-    margin: 6px 0;
-    font-size: 14px;
-  }
-  
-  .publication-card button {
-    margin-top: 10px;
-    margin-right: 10px;
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    font-size: 13px;
-    cursor: pointer;
-  }
-  
-  .publication-card button:hover {
-    background-color: #c9302c;
-  }
-  
-  .publication-card button:first-of-type {
-    background-color: #5cb85c;
-  }
-  
-  .publication-card button:first-of-type:hover {
-    background-color: #449d44;
-  }
-  .publication-list-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 24px 0 12px;
-    color: #333;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 4px;
-  }
-  
+  background-color: var(--primary);
+  padding: 15px 0;
+  color: white;
+}
+
+.navbar .content-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.navbar-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar-links button {
+  margin-left: 12px;
+}
+
+
+/* ========================= */
+/* PAGE LAYOUT               */
+/* ========================= */
+.content-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 60px;
+  background-color: #eaf1ff;
+  z-index: 10;
+  padding-top: 10px;
+}
+
+
+/* ========================= */
+/* FORM                      */
+/* ========================= */
+.publication-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.publication-form input {
+  flex: 1 1 300px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.publication-form input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.author-select {
+  flex: 1 1 100%;
+  margin-bottom: 10px;
+}
+
+
+/* ========================= */
+/* HEADER + SORT/VIEW        */
+/* ========================= */
+.publication-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+
+.publication-list-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.view-sort-options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+
+.sticky-form {
+  position: sticky;
+  top: 120px; /* adjust based on your navbar and toolbar height */
+  z-index: 9;
+  background-color: #f9fbfc;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+}
+
+
+
+
+/* ========================= */
+/* PUBLICATION LIST / CARDS  */
+/* ========================= */
+.publication-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.publication-list.list-view {
+  display: block;
+}
+
+.publication-list.list-view .publication-card {
+  margin-bottom: 20px;
+}
+
+.publication-card {
+  background: #f9fafe; /* soft blue tint */
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.publication-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+}
+
+.publication-card h3 {
+  margin-top: 0;
+  color: var(--primary);
+}
+
+.publication-card p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+
+/* ========================= */
+/* CARD BUTTONS              */
+/* ========================= */
+.card-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.card-buttons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.card-buttons .edit {
+  background-color: #10B981; /* emerald-500 */
+  color: white;
+}
+
+.card-buttons .edit:hover {
+  background-color: #059669; /* emerald-600 */
+}
+
+.card-buttons .delete {
+  background-color: #EF4444; /* red-500 */
+  color: white;
+}
+
+.card-buttons .delete:hover {
+  background-color: #DC2626; /* red-600 */
+}
