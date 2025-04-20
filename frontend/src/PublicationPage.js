@@ -7,33 +7,33 @@ import {
   deletePublication
 } from './api/api';
 
-// Page styles
+
 import './PublicationPage.css';
 
-// Icons for navigation and toolbar buttons
+// Icons and routing
 import { FaBookOpen, FaUser, FaSearch, FaThLarge, FaListUl } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-// Dropdown for selecting multiple authors
+//Dropdown for selecting multiple authors
 import Select from 'react-select';
 
 function PublicationPage() {
   // List of publications from the backend
   const [publications, setPublications] = useState([]);
 
-  // List of all authors (used in dropdown)
+  //List of all authors (used in multi-select dropdown)
   const [authorsList, setAuthorsList] = useState([]);
 
-  // Tracks which author IDs are selected for the publication
+  // Tracks which author IDs are selected
   const [selectedAuthorIds, setSelectedAuthorIds] = useState([]);
 
-  // View state: card or list layout
+  //View state (card or list)
   const [viewType, setViewType] = useState('card');
 
-  // Sort state: by title or year
+  // Sort state
   const [sortOption, setSortOption] = useState('title-asc');
 
-  // Form data the user types in
+  //Form data for publication creation/edit
   const [formData, setFormData] = useState({
     title: '',
     year: '',
@@ -42,13 +42,17 @@ function PublicationPage() {
     department: ''
   });
 
-  // Tracks which publication is being edited
+  //Tracks which publication is being edited
   const [editingId, setEditingId] = useState(null);
 
-  // For navigating between pages
+  //Institution filter state
+  const [institutionFilter, setInstitutionFilter] = useState('');
+  const allInstitutions = [...new Set(publications.map(pub => pub.institution).filter(Boolean))];
+
+  //Navigation hook
   const navigate = useNavigate();
 
-  // On page load, get all publications and authors
+  // Load data on page mount
   useEffect(() => {
     loadPublications();
     fetch('/api/authors')
@@ -57,18 +61,19 @@ function PublicationPage() {
       .catch(err => console.error("Error fetching authors:", err));
   }, []);
 
-  // Fetch publication list from backend
+
+  // Fetch all publications
   const loadPublications = async () => {
     const data = await fetchPublications();
     setPublications(data);
   };
 
-  // Handle input field changes
+  //Handle input changes
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Edit a publication (pre-fill form)
+  //Start editing a publication
   const handleEdit = (pub) => {
     setFormData({
       title: pub.title,
@@ -81,17 +86,18 @@ function PublicationPage() {
     setSelectedAuthorIds(pub.authorEntities?.map(a => a.idAuthor) || []);
   };
 
-  // Delete a publication by ID
+
+
+  //Delete a publication
   const handleDelete = async (id) => {
     await deletePublication(id);
-    loadPublications(); // reload list
+    loadPublications();
   };
 
-  // Submit form: create or update publication
+  // Submit form for create or update
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create the payload for backend
     const payload = {
       title: formData.title,
       authors: '', // optional string
@@ -107,7 +113,7 @@ function PublicationPage() {
       await createPublication(payload, selectedAuthorIds);
     }
 
-    // Reset the form
+    // Reset form
     setFormData({
       title: '',
       year: '',
@@ -120,8 +126,12 @@ function PublicationPage() {
     loadPublications();
   };
 
-  // Sort publications based on selected sort option
-  const sortedPublications = [...publications].sort((a, b) => {
+  // Filter and sort logic
+  const filteredPubs = publications.filter(pub =>
+    !institutionFilter || pub.institution === institutionFilter
+  );
+
+  const sortedPublications = [...filteredPubs].sort((a, b) => {
     if (sortOption === 'title-asc') return a.title.localeCompare(b.title);
     if (sortOption === 'title-desc') return b.title.localeCompare(a.title);
     if (sortOption === 'year-asc') return a.year - b.year;
@@ -129,9 +139,11 @@ function PublicationPage() {
     return 0;
   });
 
+
+
   return (
     <div className="publication-page">
-      {/* 🔹 NAVIGATION BAR */}
+      {/* NAVIGATION BAR */}
       <nav className="navbar">
         <div className="content-container">
           <div className="navbar-title">Publication Listing Service</div>
@@ -149,15 +161,15 @@ function PublicationPage() {
         </div>
       </nav>
 
-      {/* 🔹 PAGE CONTENT */}
+      {/* MAIN CONTENT */}
       <div className="content-container">
         <div className="publication-content-card">
           <h2 className="page-title">Manage Publications</h2>
 
-          {/* 🔹 FORM */}
+          {/*PUBLICATION FORM */}
           <form onSubmit={handleSubmit} className="publication-form">
-            {/* Input fields */}
             <input name="title" placeholder="Title" value={formData.title} onChange={handleChange} required />
+
             <Select
               isMulti
               options={authorsList.map(author => ({
@@ -176,12 +188,12 @@ function PublicationPage() {
               placeholder="Select or search authors..."
               className="author-select"
             />
+
             <input name="year" placeholder="Year" value={formData.year} onChange={handleChange} required />
             <input name="pages" placeholder="Pages" value={formData.pages} onChange={handleChange} />
             <input name="institution" placeholder="Institution" value={formData.institution} onChange={handleChange} />
             <input name="department" placeholder="Department" value={formData.department} onChange={handleChange} />
 
-            {/* Buttons */}
             <div style={{ display: 'flex', gap: '10px' }}>
               <button type="submit" className="btn">
                 {editingId ? 'Update' : 'Add'} Publication
@@ -206,13 +218,14 @@ function PublicationPage() {
             </div>
           </form>
 
-          {/* Divider below the form */}
           <hr className="section-divider" />
 
-          {/* 🔹 TOOLBAR: Heading + View/Sort (now under form) */}
+          {/*VIEW / SORT / FILTER TOOLBAR */}
           <div className="publication-toolbar">
             <h3 className="publication-list-title">Current Publications</h3>
             <div className="view-sort-options">
+
+              {/* View buttons */}
               <span>View:</span>
               <button className={`btn-outline ${viewType === 'card' ? 'active' : ''}`} onClick={() => setViewType('card')}>
                 <FaThLarge />
@@ -220,6 +233,9 @@ function PublicationPage() {
               <button className={`btn-outline ${viewType === 'list' ? 'active' : ''}`} onClick={() => setViewType('list')}>
                 <FaListUl />
               </button>
+
+
+              {/* Sort buttons */}
               <span style={{ marginLeft: '20px' }}>Sort:</span>
               <button className={`btn-outline ${sortOption.includes('title') ? 'active' : ''}`}
                 onClick={() =>
@@ -233,10 +249,38 @@ function PublicationPage() {
               >
                 Year {sortOption.startsWith('year') ? (sortOption.endsWith('asc') ? '↑' : '↓') : ''}
               </button>
+
+
+              {/* Institution filter dropdown */}
+              <span style={{ marginLeft: '20px' }}>Institution:</span>
+              <select
+                value={institutionFilter}
+                onChange={(e) => setInstitutionFilter(e.target.value)}
+                style={{ padding: '6px', borderRadius: '6px' }}
+              >
+                <option value="">All</option>
+                {allInstitutions.map((inst, index) => (
+                  <option key={index} value={inst}>{inst}</option>
+                ))}
+              </select>
+
+
+              {/* Clear filter button */}
+              {institutionFilter && (
+                <button
+                  className="btn-outline"
+                  style={{ marginLeft: '10px' }}
+                  onClick={() => setInstitutionFilter('')}
+                >
+                  Clear
+                </button>
+              )}
             </div>
           </div>
 
-          {/* 🔹 LIST OF PUBLICATIONS */}
+
+
+          {/*PUBLICATION LIST */}
           <div className={`publication-list ${viewType === 'list' ? 'list-view' : ''}`}>
             {sortedPublications.map(pub => (
               <div key={pub.idPublication} className="publication-card">

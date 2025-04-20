@@ -27,12 +27,6 @@ public class PublicationController {
         return publicationService.getByAuthor(authorId);
     }
 
-    // Search publications by keyword
-    @GetMapping("/search")
-    public List<Publication> search(@RequestParam String keyword) {
-        return publicationService.searchByKeyword(keyword);
-    }
-
     // Create a new publication with associated author IDs
     @PostMapping
     public Publication createPublication(@RequestBody PublicationRequest request) {

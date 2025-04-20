@@ -2,7 +2,11 @@
 
 const API_BASE = "http://localhost:8080/api";
 
-// Fetch publications with error handling
+
+/* PUBLICATION API FUNCTIONS */
+
+
+// Fetch publications 
 export const fetchPublications = async () => {
   try {
     const res = await fetch(`${API_BASE}/publications`);
@@ -14,17 +18,6 @@ export const fetchPublications = async () => {
   }
 };
 
-// Fetch authors with error handling
-export const fetchAuthors = async () => {
-  try {
-    const res = await fetch(`${API_BASE}/authors`);
-    if (!res.ok) throw new Error(`Failed to fetch authors: ${res.status}`);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching authors:", error);
-    return []; // Return empty array as fallback
-  }
-};
 
 // Create a new publication
 export const createPublication = async (newPub, authorIds) => {
@@ -78,6 +71,22 @@ export const deletePublication = async (id) => {
   }
 };
 
+
+/* AUTHOR API FUNCTION */
+
+
+// Fetch authors with error handling
+export const fetchAuthors = async () => {
+  try {
+    const res = await fetch(`${API_BASE}/authors`);
+    if (!res.ok) throw new Error(`Failed to fetch authors: ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.error("Error fetching authors:", error);
+    return []; // Return empty array as fallback
+  }
+};
+
 // Create a new author
 export const createAuthor = async (newAuthor) => {
   try {
@@ -93,6 +102,7 @@ export const createAuthor = async (newAuthor) => {
   }
 };
 
+
 // Update an existing author
 export const updateAuthor = async (id, updatedAuthor) => {
   try {
@@ -107,6 +117,7 @@ export const updateAuthor = async (id, updatedAuthor) => {
     console.error("Error updating author:", error);
   }
 };
+
 
 // Delete an author
 export const deleteAuthor = async (id) => {

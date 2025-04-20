@@ -23,6 +23,7 @@ public class AuthorService {
         return authorRepository.findById(id).orElse(null);
     }
 
+
     // FILTER by institution
     public List<Author> getByInstitution(String institution) {
         return authorRepository.findByInstitution(institution);
@@ -33,7 +34,7 @@ public class AuthorService {
         return authorRepository.findByDepartment(department);
     }
 
-    // ADD author (embedded SQL)
+    // ADD author 
     public void createAuthor(Author author) {
         authorRepository.insertAuthor(
             author.getName(),
@@ -45,7 +46,7 @@ public class AuthorService {
         );
     }
 
-    // UPDATE author (embedded SQL)
+    // UPDATE author 
     public void updateAuthor(Long id, Author author) {
         authorRepository.updateAuthor(
             id,
@@ -58,7 +59,8 @@ public class AuthorService {
         );
     }
 
-    // DELETE author (embedded SQL)
+
+    // DELETE author
     public void deleteAuthor(Long id) {
         authorRepository.deleteAuthorById(id);
     }

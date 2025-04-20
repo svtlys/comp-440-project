@@ -1,3 +1,11 @@
+:root {
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --primary-light: #EEF2FF;
+  --text-dark: #1E293B;
+  --border-color: #CBD5E1;
+}
+
 
 /* ------------------------- */
 /* GLOBAL STYLES & BODY  */
@@ -44,18 +52,22 @@ body, html {
 }
 
 .navbar-links button {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #4e73df;
-  background: transparent;
-  color: #4e73df;
+  margin-left: 12px;
+  background-color: #ffffff;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .navbar-links button:hover {
-  background: #4e73df;
-  color: white;
+  background-color: var(--primary);
+  color: #ffffff;
 }
+
 
 /* ------------------------- */
 /* CONTENT WRAPPER       */
@@ -98,12 +110,20 @@ body, html {
 }
 
 .search-box button {
-  background: #4e73df;
+  background-color: var(--primary);
   color: white;
-  padding: 10px 16px;
-  border: none;
+  border: 1px solid var(--primary);
   border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-box button:hover {
+  background-color: white;
+  color: var(--primary);
 }
 
 /* ------------------------- */
@@ -137,7 +157,7 @@ body, html {
 /* ------------------------- */
 /* LAYOUT GRID           */
 /* ------------------------- */
-.sort-filter-bar,
+sort-filter-bar,
 .layout-container {
   display: flex;
   gap: 32px;
@@ -160,7 +180,7 @@ body, html {
 
 .filter-section h4 {
   margin-bottom: 6px;
-  color: #4e73df;
+  color: var(--primary);
 }
 
 .keyword-box {
@@ -168,6 +188,23 @@ body, html {
   padding: 6px 10px;
   border-radius: 6px;
 }
+
+/* Custom Checkbox Styling */
+.filter-section label {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  gap: 8px;
+  color: var(--text-dark);
+}
+
+.filter-section input[type="checkbox"] {
+  accent-color: var(--primary); /* ensures checkboxes match theme */
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
 
 /* ------------------------- */
 /* YEAR SLIDER STYLES   */
@@ -182,7 +219,7 @@ body, html {
 }
 
 .year-track {
-  background: #4e73df;
+  background: var(--primary);
   height: 4px;
   border-radius: 4px;
 }
@@ -190,7 +227,7 @@ body, html {
 .year-thumb {
   height: 16px;
   width: 16px;
-  background: #4e73df;
+  background: var(--primary);
   border: 2px solid white;
   border-radius: 50%;
   cursor: grab;
@@ -223,16 +260,19 @@ body, html {
 }
 
 .sort-buttons button {
-  padding: 8px 14px;
   background: white;
-  color: #4e73df;
-  border: 1px solid #4e73df;
+  color: var(--primary);
+  border: 1px solid var(--primary);
   border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .sort-buttons button:hover {
-  background: #4e73df;
+  background: var(--primary);
   color: white;
 }
 
@@ -289,7 +329,7 @@ body, html {
 }
 
 .modal-content h3 {
-  background: #4e73df;
+  background: var(--primary);
   color: white;
   padding: 12px 16px;
   margin: -30px -30px 20px -30px;
@@ -325,4 +365,48 @@ body, html {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ------------------------- */
+/* UNIFIED BUTTON STYLES   */
+/* ------------------------- */
+.btn {
+  background-color: var(--primary);
+  color: white;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: white;
+  color: var(--primary);
+}
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.no-result-message {
+  font-size: 1.1rem;
+  color: #666;
+  padding: 1rem;
+  font-style: italic;
 }

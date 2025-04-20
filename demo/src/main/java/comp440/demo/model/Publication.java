@@ -18,10 +18,9 @@ public class Publication {
     private String title;
     private String authors;
     private int year;
-    private String pages;
+    private int pages;
     private String institution;
     private String department;
-    private String keywords; // Add back keyword field
 
     @JsonIgnoreProperties("publications")
     @ManyToMany
@@ -66,11 +65,11 @@ public class Publication {
         this.year = year;
     }
 
-    public String getPages() {
+    public int getPages() {
         return pages;
     }
 
-    public void setPages(String pages) {
+    public void setPages(int pages) {
         this.pages = pages;
     }
 
@@ -88,14 +87,6 @@ public class Publication {
 
     public void setDepartment(String department) {
         this.department = department;
-    }
-
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
     }
 
     public Set<Author> getAuthorEntities() {

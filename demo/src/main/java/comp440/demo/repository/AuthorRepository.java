@@ -12,19 +12,23 @@ import java.util.List;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
+    
 
     // Custom native query to get all authors
     @Query(value = "SELECT * FROM Author", nativeQuery = true)
     List<Author> getAllAuthors();
 
+
     // Filter by institution
     @Query(value = "SELECT * FROM Author WHERE institution = :institution", nativeQuery = true)
     List<Author> findByInstitution(@Param("institution") String institution);
+
 
     // Filter by department
     @Query(value = "SELECT * FROM Author WHERE department = :department", nativeQuery = true)
     List<Author> findByDepartment(@Param("department") String department);
 
+    
     // Insert author
     @Modifying
     @Transactional
@@ -36,6 +40,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
                       @Param("email") String email,
                       @Param("address") String address,
                       @Param("homepage") String homepage);
+
+
 
     // Update author
     @Modifying
@@ -49,6 +55,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
                       @Param("email") String email,
                       @Param("address") String address,
                       @Param("homepage") String homepage);
+
 
     // Delete author
     @Modifying
